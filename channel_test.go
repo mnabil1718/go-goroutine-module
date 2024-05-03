@@ -12,6 +12,17 @@ func PutDataIntoChannel(channel chan string) {
 	fmt.Println("CHANNEL: Put data success")
 }
 
+func InputDataOnly(channel chan<- string) {
+	channel <- "Hello"
+	fmt.Println("CHANNEL: input data success")
+}
+
+func OutputDataOnly(channel <-chan string) {
+	data := <-channel
+	fmt.Println(data)
+	fmt.Println("CHANNEL: output data success")
+}
+
 func TestChannel(t *testing.T) {
 	channel := make(chan string)
 	defer close(channel)
@@ -22,5 +33,13 @@ func TestChannel(t *testing.T) {
 	fmt.Println(data)
 
 	time.Sleep(5 * time.Second)
+}
 
+func TestChannelDirection(t *testing.T) {
+	channel := make(chan string)
+	defer close(channel)
+	go InputDataOnly(channel)
+	go OutputDataOnly(channel)
+
+	time.Sleep(5 * time.Second)
 }
